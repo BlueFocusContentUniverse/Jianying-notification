@@ -350,10 +350,15 @@ redis-cli -h $REDIS_HOST ping
 
 ### Prometheus + Grafana
 
-1. **Install Celery Exporter**
+1. **Install Celery Exporter** (Note: Add to requirements.txt if using)
    ```bash
+   # Option 1: Install separately
    pip install celery-exporter
    celery-exporter --broker-url=$CELERY_BROKER_URL
+   
+   # Option 2: Add to requirements.txt
+   echo "celery-exporter==1.10.0" >> requirements.txt
+   pip install -r requirements.txt
    ```
 
 2. **Configure Prometheus**
@@ -384,11 +389,14 @@ Add to task definition:
 ### Database Backup
 
 ```bash
-# Automated daily backup
-pg_dump $DATABASE_URL > backup_$(date +%Y%m%d).sql
+# Automated daily backup with compression
+pg_dump "$DATABASE_URL" | gzip > backup_$(date +%Y%m%d).sql.gz
 
-# Restore
-psql $DATABASE_URL < backup_20240101.sql
+# Restore from compressed backup
+gunzip < backup_20240101.sql.gz | psql "$DATABASE_URL"
+
+# Alternative: Use pg_dump with explicit connection parameters
+pg_dump -h hostname -U username -d database | gzip > backup_$(date +%Y%m%d).sql.gz
 ```
 
 ### Redis Backup
