@@ -22,7 +22,7 @@ A message queue notification Python project using Celery workers to handle video
 ## Prerequisites
 
 - Docker and Docker Compose (recommended)
-- OR Python 3.11+, Redis, and PostgreSQL
+- OR Python 3.14+, Redis, and PostgreSQL
 
 ## Quick Start with Docker
 
@@ -57,7 +57,12 @@ A message queue notification Python project using Celery workers to handle video
 
 1. **Install dependencies**
    ```bash
-   pip install -r requirements.txt
+   pip install .
+   ```
+   
+   Or for development with optional dependencies:
+   ```bash
+   pip install ".[dev]"
    ```
 
 2. **Set up environment variables**
@@ -175,8 +180,8 @@ Jianying-notification/
 ├── Dockerfile                  # Docker image definition
 ├── example_usage.py            # Example usage script
 ├── init_db.py                  # Database initialization script
-├── README.md                   # This file
-└── requirements.txt            # Python dependencies
+├── pyproject.toml              # Python dependencies and project metadata
+└── README.md                   # This file
 ```
 
 ### Running Tests
