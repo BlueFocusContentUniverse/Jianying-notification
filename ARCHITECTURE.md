@@ -184,7 +184,7 @@ def urgent_task():
 1. **Local Development**:
    ```bash
    # Install dependencies
-   pip install -r requirements.txt
+   pip install .
    
    # Start services
    docker-compose up -d redis postgres

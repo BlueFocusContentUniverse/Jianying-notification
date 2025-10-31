@@ -1,5 +1,5 @@
 # Use official Python runtime as base image
-FROM python:3.11-slim
+FROM python:3.14-slim
 
 # Set working directory in container
 WORKDIR /app
@@ -14,16 +14,22 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     postgresql-client \
+    libpq-dev \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements file
-COPY requirements.txt .
+# Copy pyproject.toml and setup files first for better layer caching
+COPY pyproject.toml .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install build dependencies with trusted hosts to avoid SSL issues
+RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org \
+    setuptools>=68.0 wheel
 
 # Copy application code
 COPY . .
+
+# Install Python dependencies from pyproject.toml
+RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org .
 
 # Create non-root user for security
 RUN useradd -m -u 1000 celeryuser && \

@@ -14,7 +14,7 @@ This guide provides step-by-step instructions for deploying the Jianying Notific
 
 ### Required Software
 - Docker 20.10+ and Docker Compose 2.0+
-- OR Python 3.11+ (for manual deployment)
+- OR Python 3.14+ (for manual deployment)
 - Git
 
 ### Required Services
@@ -62,7 +62,7 @@ This guide provides step-by-step instructions for deploying the Jianying Notific
    ```bash
    python3 -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install -r requirements.txt
+   pip install .
    ```
 
 2. **Configure Environment**
@@ -350,15 +350,14 @@ redis-cli -h $REDIS_HOST ping
 
 ### Prometheus + Grafana
 
-1. **Install Celery Exporter** (Note: Add to requirements.txt if using)
+1. **Install Celery Exporter** (Note: Add to pyproject.toml if using)
    ```bash
    # Option 1: Install separately
    pip install celery-exporter
    celery-exporter --broker-url=$CELERY_BROKER_URL
    
-   # Option 2: Add to requirements.txt
-   echo "celery-exporter==1.10.0" >> requirements.txt
-   pip install -r requirements.txt
+   # Option 2: Add to pyproject.toml dependencies
+   pip install celery-exporter==1.10.0
    ```
 
 2. **Configure Prometheus**
