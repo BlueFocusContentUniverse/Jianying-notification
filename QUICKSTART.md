@@ -5,7 +5,7 @@ Get the Jianying Notification system up and running in 5 minutes!
 ## Prerequisites
 
 - Docker and Docker Compose installed
-- OR Python 3.11+ with Redis and PostgreSQL
+- OR Python 3.14+ with Redis and PostgreSQL
 
 ## Option 1: Docker (Recommended) ⚡
 
@@ -47,7 +47,7 @@ python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install packages
-pip install -r requirements.txt
+pip install .
 ```
 
 ### 2. Configure Environment
