@@ -18,21 +18,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy pyproject.toml for dependency installation
+# Copy pyproject.toml and setup files first for better layer caching
 COPY pyproject.toml .
 
-# Install Python dependencies directly from pyproject.toml
+# Install build dependencies with trusted hosts to avoid SSL issues
 RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org \
-    celery==5.3.4 \
-    redis==5.0.1 \
-    sqlalchemy==2.0.23 \
-    psycopg2-binary==2.9.11 \
-    python-dotenv==1.0.0 \
-    requests==2.31.0 \
-    flower==2.0.1
+    setuptools>=68.0 wheel
 
 # Copy application code
 COPY . .
+
+# Install Python dependencies from pyproject.toml
+RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org .
 
 # Create non-root user for security
 RUN useradd -m -u 1000 celeryuser && \
