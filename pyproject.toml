@@ -13,11 +13,10 @@ authors = [
     {name = "BlueFocusContentUniverse"}
 ]
 dependencies = [
-    "celery==5.3.4",
-    "redis==5.0.1",
-    "python-dotenv==1.0.0",
-    "requests==2.31.0",
-    "flower==2.0.1",
+    "celery==5.5.3",
+    "redis==7.0.1",
+    "python-dotenv==1.2.1",
+    "requests==2.32.5",
 ]
 
 [project.optional-dependencies]

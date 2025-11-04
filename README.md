@@ -180,16 +180,6 @@ Jianying-notification/
 └── README.md                   # This file
 ```
 
-## Monitoring
-
-### Flower Dashboard
-
-Access Flower at http://localhost:5555 to:
-- Monitor active tasks
-- View task history
-- Check worker status
-- Inspect task details
-
 ## Troubleshooting
 
 ### Connection Issues
