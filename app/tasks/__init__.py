@@ -3,11 +3,11 @@ Tasks module initialization
 """
 
 from app.tasks.video_tasks import (
+    process_video_render_completion,
     update_video_render_status,
-    process_video_render_completion
 )
 
 __all__ = [
-    'update_video_render_status',
-    'process_video_render_completion'
+    "process_video_render_completion",
+    "update_video_render_status"
 ]

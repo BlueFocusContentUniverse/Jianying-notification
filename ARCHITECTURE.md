@@ -2,7 +2,7 @@
 
 ## System Overview
 
-The Jianying Notification system is designed to handle video render status updates asynchronously using Celery workers. When a video rendering process completes, it triggers a task that updates the database with the render status and OSS link.
+The Jianying Notification system is designed to handle video render status updates asynchronously using Celery workers. When a video rendering process completes, it triggers a task that processes the notification with the render status and OSS link.
 
 ## Components
 
@@ -22,17 +22,7 @@ The Jianying Notification system is designed to handle video render status updat
   - Caches task results
   - Enables task distribution across multiple workers
 
-### 3. PostgreSQL Database
-- **Purpose**: Persistent storage for video render records
-- **Schema**: Single table `video_renders` with fields:
-  - `id`: Primary key
-  - `video_id`: Unique video identifier
-  - `status`: Current render status (pending/processing/completed/failed)
-  - `oss_link`: OSS URL to rendered video
-  - `error_message`: Error details if failed
-  - `created_at`, `updated_at`: Timestamps
-
-### 4. Flower Dashboard
+### 3. Flower Dashboard
 - **Purpose**: Real-time monitoring and management
 - **Features**:
   - View active tasks
@@ -53,9 +43,10 @@ Celery Task Queue (Redis)
        v
 Celery Worker
        |
-       | (processes task)
+       | (processes notification)
        v
-Update Database (PostgreSQL)
+Custom Logic
+(API calls, webhooks, etc.)
        |
        v
 Return Result
@@ -74,10 +65,9 @@ Task Queue
   v
 Celery Worker
   |
-  |- Query database for existing record
-  |- Create or update record
-  |- Set status and OSS link
-  |- Commit to database
+  |- Log status update
+  |- Execute custom logic (API calls, webhooks, etc.)
+  |- Process notification
   |
   v
 Result (success/failure)
@@ -96,11 +86,11 @@ Celery Worker
   |
   |- Call update_video_render_status
   |- Set status to 'completed'
-  |- Store OSS link
+  |- Process OSS link
   |- Additional processing (notifications, etc.)
   |
   v
-Database Updated
+Task Completed
 ```
 
 ## Error Handling
@@ -108,12 +98,7 @@ Database Updated
 ### Automatic Retry
 - Failed tasks are automatically retried up to 3 times
 - Exponential backoff: 60 seconds between retries
-- On final failure, status is set to 'failed' with error message
-
-### Database Transactions
-- All database operations are wrapped in transactions
-- Automatic rollback on error
-- Connection pooling prevents resource exhaustion
+- On final failure, error is logged with full details
 
 ### Logging
 - All operations are logged with appropriate levels
@@ -146,14 +131,12 @@ def urgent_task():
 
 1. **Non-root User**: Docker container runs as non-root user `celeryuser`
 2. **Environment Variables**: Sensitive credentials stored in `.env` file (not committed)
-3. **Database Connection**: Uses connection pooling with health checks
-4. **Input Validation**: Task parameters validated before processing
+3. **Input Validation**: Task parameters validated before processing
 
 ## Monitoring
 
 ### Health Checks
 - Redis: `redis-cli ping`
-- PostgreSQL: `pg_isready`
 - Celery Worker: Flower dashboard
 
 ### Metrics to Track
@@ -161,23 +144,19 @@ def urgent_task():
 - Task processing time
 - Queue length
 - Worker utilization
-- Database connection pool usage
 
 ## Deployment
 
 ### Docker Deployment
 1. Configure `.env` file
 2. Run `docker-compose up -d`
-3. Initialize database with `init_db.py`
-4. Monitor via Flower at http://localhost:5555
+3. Monitor via Flower at http://localhost:5555
 
 ### Production Considerations
 - Use managed Redis (e.g., AWS ElastiCache)
-- Use managed PostgreSQL (e.g., AWS RDS)
 - Set up log aggregation (e.g., ELK stack)
 - Configure alerts for task failures
 - Implement rate limiting for task submission
-- Set up backup strategies for database
 
 ## Development Workflow
 
@@ -187,7 +166,7 @@ def urgent_task():
    pip install .
    
    # Start services
-   docker-compose up -d redis postgres
+   docker-compose up -d redis
    
    # Run worker locally
    celery -A app.celery_app worker --loglevel=debug
@@ -205,7 +184,7 @@ def urgent_task():
 3. **Debugging**:
    - Check worker logs: `docker-compose logs -f celery-worker`
    - Use Flower to inspect failed tasks
-   - Query database directly for state verification
+   - Review logs for task processing details
 
 ## Future Enhancements
 

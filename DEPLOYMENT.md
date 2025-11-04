@@ -18,8 +18,8 @@ This guide provides step-by-step instructions for deploying the Jianying Notific
 - Git
 
 ### Required Services
-- Redis 6.0+
-- PostgreSQL 13+
+- Redis 7.0+
+- PostgreSQL 16+
 
 ## Local Development
 

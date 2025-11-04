@@ -56,17 +56,16 @@ cp .env.example .env
 # Edit .env with your Redis and PostgreSQL settings
 ```
 
-### 3. Initialize Database
+### 3. Start Celery Worker
 ```bash
-python init_db.py
+# On Windows, use the solo pool to avoid process pooling issues
+celery -A app.celery_app worker --loglevel=info --pool=solo
+
+# On Linux/Mac (if needed)
+# celery -A app.celery_app worker --loglevel=info
 ```
 
-### 4. Start Celery Worker
-```bash
-celery -A app.celery_app worker --loglevel=info
-```
-
-### 5. (Optional) Start Flower Dashboard
+### 4. (Optional) Start Flower Dashboard
 In a new terminal:
 ```bash
 celery -A app.celery_app flower
