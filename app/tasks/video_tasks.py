@@ -67,14 +67,6 @@ def update_video_render_status(
 
         logger.info(f"Successfully processed video render status for task_id: {task_id} (API call: {api_success})")
 
-        return {
-            "success": True,
-            "message": "Video render status processed successfully",
-            "task_id": task_id,
-            "status": status,
-            "api_called": api_success
-        }
-
     except Exception as e:
         logger.error(f"Error processing video render status: {e!s}", exc_info=True)
         # Retry the task with exponential backoff
@@ -141,8 +133,6 @@ def process_video_render_completion(
             )
 
         logger.info(f"Video render completed successfully for video_id: {video_id}")
-
-        return result
 
     except Exception as e:
         logger.error(f"Error processing video render completion: {e!s}", exc_info=True)

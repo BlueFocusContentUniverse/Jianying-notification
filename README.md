@@ -129,11 +129,7 @@ The system supports the following statuses:
 
 All configuration is managed through environment variables. See `.env.example` for available options:
 
-- `REDIS_HOST`: Redis server hostname
-- `REDIS_PORT`: Redis server port
-- `REDIS_DB`: Redis database number
 - `CELERY_BROKER_URL`: Celery broker URL
-- `CELERY_RESULT_BACKEND`: Celery result backend URL
 - `LOG_LEVEL`: Application log level
 - `VIDEO_API_BASE_URL`: Base URL for video management API (e.g., http://localhost:5000)
 - `VIDEO_API_TOKEN`: Bearer token for authenticating with video management API

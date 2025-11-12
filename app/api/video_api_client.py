@@ -116,7 +116,7 @@ def create_video_record(
     try:
         url = f"{API_BASE_URL}/api/videos/create"
         headers = {
-            "Authorization": f"Bearer {API_TOKEN}",
+            "Authorization": f"bearer {API_TOKEN}",
             "Content-Type": "application/json"
         }
 
@@ -141,6 +141,8 @@ def create_video_record(
             payload["extra"] = extra
 
         logger.info(f"Creating video record via API: {url}")
+
+        logger.info(f"Payload: {payload}")
 
         response = requests.post(url, json=payload, headers=headers, timeout=30)
         response.raise_for_status()

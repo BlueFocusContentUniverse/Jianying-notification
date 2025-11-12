@@ -17,7 +17,6 @@ celery_app = Celery(
 # Configure Celery
 celery_config = {
     "broker_url": config.CELERY_BROKER_URL,
-    "result_backend": config.CELERY_RESULT_BACKEND,
     "task_serializer": "json",
     "accept_content": ["json"],
     "result_serializer": "json",
