@@ -25,8 +25,13 @@ class Config:
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 
     # Video API Configuration
-    VIDEO_API_BASE_URL = os.getenv("VIDEO_API_BASE_URL", "http://localhost:5000")
-    VIDEO_API_TOKEN = os.getenv("VIDEO_API_TOKEN", "")
+    VIDEO_API_BASE_URL = os.getenv("VIDEO_API_BASE_URL", "http://localhost:9001")
+
+    # Cognito M2M Configuration
+    COGNITO_DOMAIN = os.getenv("COGNITO_DOMAIN", "")
+    COGNITO_CLIENT_ID = os.getenv("COGNITO_CLIENT_ID", "")
+    COGNITO_CLIENT_SECRET = os.getenv("COGNITO_CLIENT_SECRET", "")
+    COGNITO_SCOPE = os.getenv("COGNITO_SCOPE", "")
 
 
 config = Config()

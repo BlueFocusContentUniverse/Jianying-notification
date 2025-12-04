@@ -8,11 +8,10 @@ from typing import Any, Dict, Optional
 
 import requests
 
-logger = logging.getLogger(__name__)
+from app.auth import get_m2m_token
+from app.config import config
 
-# API Configuration
-API_BASE_URL = os.getenv("VIDEO_API_BASE_URL", "http://localhost:5000")
-API_TOKEN = os.getenv("VIDEO_API_TOKEN", "")
+logger = logging.getLogger(__name__)
 
 
 def call_video_task_status_api(
@@ -38,14 +37,16 @@ def call_video_task_status_api(
     Returns:
         bool: True if API call succeeded, False otherwise
     """
-    if not API_TOKEN:
-        logger.warning("VIDEO_API_TOKEN not configured, skipping API call")
+    # Get M2M token
+    m2m_token = get_m2m_token()
+    if not m2m_token:
+        logger.warning("Failed to obtain M2M token, skipping API call")
         return False
 
     try:
-        url = f"{API_BASE_URL}/api/video-tasks/{task_id}/status"
+        url = f"{config.VIDEO_API_BASE_URL}/api/video-tasks/{task_id}/status"
         headers = {
-            "Authorization": f"Bearer {API_TOKEN}",
+            "Authorization": f"Bearer {m2m_token}",
             "Content-Type": "application/json"
         }
 
@@ -109,14 +110,16 @@ def create_video_record(
     Returns:
         bool: True if API call succeeded, False otherwise
     """
-    if not API_TOKEN:
-        logger.warning("VIDEO_API_TOKEN not configured, skipping API call")
+    # Get M2M token
+    m2m_token = get_m2m_token()
+    if not m2m_token:
+        logger.warning("Failed to obtain M2M token, skipping API call")
         return False
 
     try:
-        url = f"{API_BASE_URL}/api/videos/create"
+        url = f"{config.VIDEO_API_BASE_URL}/api/videos/create"
         headers = {
-            "Authorization": f"bearer {API_TOKEN}",
+            "Authorization": f"Bearer {m2m_token}",
             "Content-Type": "application/json"
         }
 
