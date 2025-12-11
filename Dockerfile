@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.7
 # Use official Python runtime as base image
 FROM python:3.14-slim-trixie
 
@@ -22,9 +23,8 @@ COPY . .
 
 RUN pip install .
 
-# Copy production environment file (create from .env.prod.example if needed)
-COPY .env.prod* ./
-RUN if [ -f .env.prod ]; then cp .env.prod .env; else echo "Warning: .env.prod not found, using defaults"; fi
+# Materialize runtime configuration from the bundled env file secret
+RUN --mount=type=secret,id=env_file cat /run/secrets/env_file > /app/.env
 
 # Create non-root user for security
 RUN useradd -m -u 1000 celeryuser && \
