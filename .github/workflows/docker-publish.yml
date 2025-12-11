@@ -72,10 +72,6 @@ jobs:
             type=semver,pattern={{major}}
             type=sha
 
-      - name: Materialize env file secret
-        run: printf '%s' "${{ secrets.ENV_FILE_PROD }}" > /tmp/.env.prod
-        shell: bash
-
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push API Docker image
@@ -90,7 +86,7 @@ jobs:
           cache-from: type=gha,scope=api
           cache-to: type=gha,mode=max,scope=api
           secrets: |
-            id=env_file,src=/tmp/.env.prod
+            id=env_file,${{ secrets.ENV_FILE_PROD }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
