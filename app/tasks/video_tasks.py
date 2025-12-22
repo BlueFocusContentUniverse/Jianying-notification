@@ -48,6 +48,7 @@ def update_video_render_status(
             "initialized": "INITIALIZED",
             "pending": "PENDING",
             "processing": "PROCESSING",
+            "retry": "PROCESSING",
             "completed": "COMPLETED",
             "failed": "FAILED"
         }

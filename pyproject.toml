@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jianying-notification"
-version = "0.2.1"
+version = "0.3.0"
 description = "A message queue notification Python project using Celery workers to handle video render status updates"
 readme = "README.md"
 requires-python = ">=3.14"
@@ -13,7 +13,7 @@ authors = [
     {name = "BlueFocusContentUniverse"}
 ]
 dependencies = [
-    "celery==5.5.3",
+    "celery==5.6.0",
     "redis==7.1.0",
     "python-dotenv==1.2.1",
     "requests==2.32.5",
@@ -26,4 +26,4 @@ dev = [
 ]
 
 [tool.setuptools]
-packages = ["app"]
+packages = {find = {where = ["."]}}
