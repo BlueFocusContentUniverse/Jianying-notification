@@ -161,3 +161,60 @@ def create_video_record(
     except requests.exceptions.RequestException as e:
         logger.error(f"Failed to call video creation API: {e!s}", exc_info=True)
         return False
+
+
+def report_worker_status(
+    worker_name: str,
+    hostname: Optional[str],
+    is_available: bool = True,
+    task_id: Optional[str] = None,
+    error_message: Optional[str] = None,
+    traceback: Optional[str] = None,
+    extra: Optional[Dict[str, Any]] = None,
+) -> bool:
+    """Tell the CapCut API about the health of a worker process."""
+
+    m2m_token = get_m2m_token()
+    if not m2m_token:
+        logger.warning("Failed to obtain M2M token, skipping worker status report")
+        return False
+
+    try:
+        url = f"{config.VIDEO_API_BASE_URL}/api/worker-status"
+        headers = {
+            "Authorization": f"Bearer {m2m_token}",
+            "Content-Type": "application/json"
+        }
+
+        payload = {
+            "worker_name": worker_name,
+            "hostname": hostname,
+            "is_available": is_available,
+            "task_id": task_id,
+            "error_message": error_message,
+            "traceback": traceback,
+            "extra": extra or {}
+        }
+
+        logger.info("Reporting worker status via API: %s", payload)
+        response = requests.post(url, json=payload, headers=headers, timeout=30)
+        response.raise_for_status()
+
+        result = response.json()
+        if result.get("success"):
+            logger.info(
+                "Successfully reported worker status for %s (available=%s)",
+                worker_name,
+                is_available,
+            )
+            return True
+        else:
+            logger.error(
+                "Worker status API returned success=False: %s",
+                result.get("error"),
+            )
+            return False
+
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to report worker status: {e!s}", exc_info=True)
+        return False

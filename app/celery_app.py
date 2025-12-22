@@ -2,7 +2,14 @@
 Celery application configuration and initialization
 """
 
+import os
 import sys
+
+# Add project root to sys.path to allow running this script directly
+if __name__ == "__main__":
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
 
 from celery import Celery
 
@@ -11,7 +18,7 @@ from app.config import config
 # Create Celery application instance
 celery_app = Celery(
     config.APP_NAME,
-    include=["app.tasks.video_tasks"]
+    include=["app.tasks.video_tasks", "app.tasks.worker_status"],
 )
 
 # Configure Celery
@@ -35,4 +42,8 @@ if sys.platform == "win32":
 celery_app.conf.update(celery_config)
 
 if __name__ == "__main__":
-    celery_app.start()
+    # If no arguments are provided, default to starting a worker
+    args = sys.argv[1:]
+    if not args:
+        args = ["worker", "-l", "info", "-Q", config.CELERY_QUEUE_NAME]
+    celery_app.start(args)
