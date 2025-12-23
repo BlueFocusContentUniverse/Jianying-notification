@@ -43,12 +43,12 @@ def update_video_render_status(
             logger.error(f"Error message: {error_message}")
 
         # Map status to render_status enum
-        # Valid render_status values: INITIALIZED, PENDING, PROCESSING, COMPLETED, FAILED
+        # Valid render_status values: INITIALIZED, PENDING, PROCESSING, COMPLETED, FAILED, RETRY
         render_status_map = {
             "initialized": "INITIALIZED",
             "pending": "PENDING",
             "processing": "PROCESSING",
-            "retry": "PROCESSING",
+            "retry": "RETRY",
             "completed": "COMPLETED",
             "failed": "FAILED"
         }
