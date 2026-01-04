@@ -23,9 +23,6 @@ COPY . .
 
 RUN pip install .
 
-# Materialize runtime configuration from the bundled env file secret
-RUN --mount=type=secret,id=env_file cat /run/secrets/env_file > /app/.env
-
 # Create non-root user for security
 RUN useradd -m -u 1000 celeryuser && \
     chown -R celeryuser:celeryuser /app
